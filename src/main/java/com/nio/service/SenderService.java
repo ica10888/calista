@@ -30,27 +30,10 @@ public class SenderService {
         ServerSocket socket = ssc.socket();
         socket.bind(new InetSocketAddress("127.0.0.1",18081));//绑定相应IP及port
         Selector selector = Selector.open();//开启一个selector
-        ssc.register(selector,SelectionKey.OP_ACCEPT);//绑定注册事件
+        ssc.register(selector,SelectionKey.OP_WRITE);//绑定注册事件
 
-        //使用线程处理
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        
-        while(true){
-            selector.select();//阻塞,只有当至少一个注册的事件发生的时候才会继续.
-            Set<SelectionKey> selectKeys = selector.selectedKeys();
-            Iterator<SelectionKey> it = selectKeys.iterator();
-            while (it.hasNext()) {
-                SelectionKey key = it.next();
-                it.remove();
-                // 处理事件. 可以用多线程来处理.
-                //selector.dispatch(key);
-                scheduledExecutorService.execute( () -> {
 
-                    String res = key.attachment().toString();
-                    System.out.println(res);
-                });
-            }
-        }
     }
 
 }
+
